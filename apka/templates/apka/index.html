@@ -1,0 +1,9 @@
+{% if lista_ostatnich_pytan %}
+    <ul>
+    {% for pytanie in lista_ostatnich_pytan %}
+        <li><a href="{% url 'apka:detale' pytanie.id %}">{{ pytanie.pytanie_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Brak dostepnych ankiet</p>
+{% endif %}

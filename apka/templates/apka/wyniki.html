@@ -1,0 +1,9 @@
+<h1>{{ pytanie.pytanie_text }}</h1>
+
+<ul>
+    {% for wybor in pytanie.wybor_set.all %}
+        <li>{{ wybor.wybor_text }} -- {{ wybor.glosy }} glos {{ wybor.glosy|pluralize }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'apka:detale' pytanie.id %}">Głosujesz ponownie?</a>

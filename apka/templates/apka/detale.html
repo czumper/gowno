@@ -1,0 +1,12 @@
+<form action ="{% url 'apka:glos' pytanie.id %}" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h1>{{ pytanie.pytanie_text }}</h1></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% for wybor in pytanie.wybor_set.all %}
+        <input type="radio" name="wybor" id="wybor{{ forloop.counter }}" value="{{ wybor.id }}">
+        <label for="wybor{{ forloop.counter }}">{{ wybor.wybor_text }}</label><br>
+    {% endfor %}
+</fieldset>
+<input type="submit" value="Głosuj">
+</form>

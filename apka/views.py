@@ -37,7 +37,7 @@ def glos(request, pytanie_id):
     else:
         wybrany_wybor.glosy = F("glosy") +1
         wybrany_wybor.save()
-        return HttpResponseRedirect(reverse("apka:wyniki", args=(pytanie.id,)))
+        return HttpResponseRedirect(reverse('apka:wyniki', args=(pytanie.id,)))
 
 
 # Create your views here.

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resetowanie Hasła</title>
+</head>
+<body>
+    <h2>Password Reset</h2>
+    <form method="post" action="{% url 'account_reset_password' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Reset Password</button>
+    </form>
+</body>
+</html>

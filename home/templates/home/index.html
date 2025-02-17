@@ -1,9 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>PITCERNIA</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'home/test.css' %}">
+    <script src="{% static 'home/scripts.js' %}" defer></script>
 </head>
-<body
-    <h1>siemanko w pitcerni</h1>
+<body>
+    <div class="top-right">
+        <a href="{% url 'account_login' %}">Login</a>
+    </div>
+    <div class="container">
+        <h1 id="greeting">Siema w pitcerni</h1>
+        <p>muala</p>
+        <button id="exampleButton">Kliknij mnie</button>
+    </div>
 </body>
 </html>

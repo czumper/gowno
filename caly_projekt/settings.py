@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-acw^d-+ng@uy+h4r7v!^)0q^_dgg7s@ib_x0ctzi&1mq0q8%sa
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['138.2.161.48']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -51,7 +51,13 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'czumpi@pitcernia.ninja'
+EMAIL_HOST_PASSWORD = 's0vxifZuiQ0M'
+DEFAUL_FROM_EMAIL = 'czumpi@pitcernia.ninja'
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True

@@ -1,0 +1,14 @@
+{% extends "baza.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Logowanie do Pitcerni</h2>
+    <form method="post" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Zaloguj się</button>
+    </form>
+    <p>Nie masz konta? <a href="{% url 'account_signup' %}">Zarejestruj się</a></p>
+</div>
+{% endblock %}

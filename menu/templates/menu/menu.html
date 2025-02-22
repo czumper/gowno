@@ -1,0 +1,14 @@
+{% extends "baza.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Menu Pitcerni</h1>
+    <ul class="list-group">
+        {% for pizza in pizze %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ pizza.nazwa }}
+                <span>{{ pizza.cena }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

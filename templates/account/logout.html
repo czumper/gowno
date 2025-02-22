@@ -1,0 +1,14 @@
+{% extends "baza.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1>Do zobaczenia!</h1>
+    <p>Czy na pewno chcesz się wylogować z Pitcerni?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Wyloguj się</button>
+        <a href="/" class="btn btn-secondary">Wróć</a>
+    </form>
+</div>
+{% endblock %}

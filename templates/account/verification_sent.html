@@ -1,0 +1,16 @@
+{% extends "baza.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1 class="display-4 text-success">Mail w drodze!</h1>
+    <p class="lead">Sprawdź swoją skrzynkę!</p>
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px; background-color: #f8f9fa; border: 2px solid #28a745;">
+        <p>Wysłaliśmy Ci maila z linkiem potwierdzającym na podany adres. Otwórz go i kliknij link, aby dołączyć do Pitcerni!</p>
+        <p class="text-muted">Nie widzisz maila? Sprawdź spam lub <a href="{% url 'account_signup' %}">spróbuj ponownie</a>.</p>
+    </div>
+    <div class="mt-4">
+        <img src="/static/images/salami.jpg" alt="Pizzunia" style="width: 100px; opacity: 0.8;">
+    </div>
+</div>
+{% endblock %}

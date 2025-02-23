@@ -1,5 +1,6 @@
 {% extends "baza.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-5 text-center">
@@ -10,7 +11,7 @@
         <p class="text-muted">Nie widzisz maila? Sprawdź spam lub <a href="{% url 'account_signup' %}">spróbuj ponownie</a>.</p>
     </div>
     <div class="mt-4">
-        <img src="/static/images/salami.jpg" alt="Pizzunia" style="width: 100px; opacity: 0.8;">
+        <img src="{% static '/static/images/salami.jpg' %}" alt="Pizzunia" style="width: 100px; opacity: 0.8;">
     </div>
 </div>
 {% endblock %}

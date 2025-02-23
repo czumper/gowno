@@ -1,5 +1,6 @@
 {% extends "baza.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-5 text-center">
@@ -17,7 +18,7 @@
     </div>
     
     <div class="mt-4">
-        <img src="/static/images/salami.jpg" alt="Pizzunia" style="width: 100px; opacity: 0.8;">
+        <img src="{% static 'images/salami.jpg' %}" alt="Pizzunia" style="width: 100px; opacity: 0.8;">
     </div>
 </div>
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends "baza.html" %}
+{% load static %}
 {% block content %}
 <div class="container mt-5">
     <h1>Siemanko w Pitcerni!</h1>
@@ -7,7 +8,7 @@
     <div class="row">
         {% for pizza in pizze %}
             <div class="col-md-4 text-center">
-                <img src="/static/images/{{ pizza.image }}" alt="{{ pizza.nazwa }}" class="img-fluid">
+                <img src="{% static '/static/images/{{ pizza.image }}' %}" alt="{{ pizza.nazwa }}" class="img-fluid">
                 <h5>{{ pizza.nazwa }}</h5>
             </div>
         {% endfor %}

@@ -8,7 +8,7 @@
     <div class="row">
         {% for pizza in pizze %}
             <div class="col-md-4 text-center">
-                <img src="{% static '/static/images/{{ pizza.image }}' %}" alt="{{ pizza.nazwa }}" class="img-fluid">
+                <img src="{% static 'images/'|add:pizza.image %}" alt="{{ pizza.nazwa }}" class="img-fluid">
                 <h5>{{ pizza.nazwa }}</h5>
             </div>
         {% endfor %}

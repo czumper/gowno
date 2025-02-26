@@ -53,3 +53,8 @@ class CustomLogowanieForm(LoginForm):
                 raise forms.ValidationError('Niepoprawne dane logowania')
             self.user = user
         return cleaned_data
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['ulica', 'numer_domu', 'numer_mieszkania', 'kod_pocztowy', 'miasto', 'telefon']

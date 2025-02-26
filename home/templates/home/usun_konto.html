@@ -1,0 +1,12 @@
+{% extends "baza.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Usuń konto</h1>
+    <p>Czy na pewno chcesz usunąć swoje konto? Tej akcji nie można cofnąć.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Usuń</button>
+        <a href="{% url 'konta:profil' %}" class="btn btn-secondary">Anuluj</a>
+    </form>
+</div>
+{% endblock %}

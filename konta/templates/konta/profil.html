@@ -1,0 +1,14 @@
+{% extends "baza.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Witaj, {{ user.username }}!</h1>
+    <p>To Twój panel użytkownika w Pitcerni.</p>
+    <ul>
+        <li><a href="{% url 'konta:edit_profile' %}">Edytuj dane</a></li>
+        <li><a href="{% url 'account_change_password' %}">Zmień hasło</a></li>
+        <li><a href="{% url 'konta:delete_account' %}">Usuń konto</a></li>
+    </ul>
+</div>
+{% endblock %}

@@ -59,11 +59,17 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = '/'  
 LOGOUT_REDIRECT_URL = '/'  
 
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_LOGIN_METHODS = {'email'}
-LOGIN_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[pitcernia.ninja] "
+
+ACCOUNT_FORMS = {
+    'signup': 'konta.forms.CustomZarejestrujForm',
+    'login': 'konta.forms.CustomLogowanieForm',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

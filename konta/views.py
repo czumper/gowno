@@ -23,3 +23,8 @@ def usun_konto(request):
         user.delete()
         return redirect('/')
     return render(request, 'konta/usun_konto.html')
+
+@login_required
+def profil(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    return render(request, 'konta/profil.html', {'profile': profile})

@@ -36,8 +36,8 @@ class CustomLogowanieForm(LoginForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.pop('login', None)
-        self.fields['login'] = self.fields.pop('login')
+        del self.fields ['login']
+        self.fields['login'] = forms.CharField(max_length=50, label='Nazwa użytkownika lub email')
 
     def clean(self):
         cleaned_data = super().clean()

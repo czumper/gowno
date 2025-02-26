@@ -9,7 +9,7 @@
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Ulica:</strong> {{ profile.ulica }}</p>
         <p><strong>Numer domu:</strong> {{ profile.numer_domu }}</p>
-        {% if profile.numer_mieszkania %}
+        {% if profile.numer_mieszkan %}
             <p><strong>Numer mieszkania:</strong> {{ profile.numer_mieszkania }}</p>
         {% endif %}
         <p><strong>Kod pocztowy:</strong> {{ profile.kod_pocztowy }}</p>
@@ -17,7 +17,7 @@
         <p><strong>Numer telefonu:</strong> {{ profile.telefon }}</p>
     </div>
     <div class="mt-3">
-        <a href="{% url 'konta:profil' %}" class="btn btn-primary">Edytuj dane</a>
+        <a href="{% url 'konta:edyctuj_profil' %}" class="btn btn-primary">Edytuj dane</a>
         <a href="{% url 'account_change_password' %}" class="btn btn-secondary">Zmień hasło</a>
         <a href="{% url 'account_email' %}" class="btn btn-secondary">Zmień email</a>
         <a href="{% url 'konta:usun_konto' %}" class="btn btn-danger">Usuń konto</a>

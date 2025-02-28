@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container mt-5 text-center">
     <h1 class="display-4 text-primary">Zaloguj się do Pitcerni</h1>
-    <p class="lead">Wpisz swoje dane!</p>
+    <p class="lead">Wpisz swoje dane:</p>
     <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px; background-color: #f8f9fa; border: 2px solid #007bff;">
         <form method="post" class="account-form">
             {% csrf_token %}
@@ -17,14 +17,14 @@
             {% endif %}
             <div class="mb-3">
                 <label for="id_login" class="form-label">Nazwa użytkownika lub email</label>
-                <input type="text" name="login" id="id_login" class="form-control" value="{{ form.login.value|default:'' }}" required>
+                <input type="text" name="login" id="id_login" class="form-control" value="{{ form.login.value|default:'' }}" required style="border: 2px solid black;">
             </div>
             <div class="mb-3">
                 <label for="id_password" class="form-label">Hasło</label>
-                <input type="password" name="password" id="id_password" class="form-control" required>
+                <input type="password" name="password" id="id_password" class="form-control" required style="border: 2px solid black;">
             </div>
             <div class="form-check mb-3">
-                <input type="checkbox" name="remember" id="id_remember" class="form-check-input" {% if form.remember.value %}checked{% endif %}>
+                <input type="checkbox" name="remember" id="id_remember" class="form-check-input" {% if form.remember.value %}checked{% endif %} style="border: 2px solid black;">
                 <label for="id_remember" class="form-check-label">Zapamiętaj mnie</label>
             </div>
             <button type="submit" class="btn btn-primary w-100">Zaloguj się</button>

@@ -3,12 +3,14 @@
 
 {% block content %}
 <div class="container mt-5 text-center">
-    <h1>Do zobaczenia!</h1>
-    <p>Czy na pewno chcesz się wylogować z Pitcerni?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Wyloguj się</button>
-        <a href="/" class="btn btn-secondary">Wróć</a>
-    </form>
+    <h1 class="display-4 text-warning">Wylogowanie z Pitcerni</h1>
+    <p class="lead">Czy na pewno chcesz się wylogować?</p>
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px; background-color: #f8f9fa; border: 2px solid #ffc107;">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning w-100">Wyloguj się</button>
+        </form>
+        <a href="{% url 'konta:profil' %}" class="btn btn-secondary mt-3">Wróć do profilu</a>
+    </div>
 </div>
 {% endblock %}

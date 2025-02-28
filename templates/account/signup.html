@@ -2,12 +2,18 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Dołącz do Pitcerni</h2>
-    <form method="post" class="form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Zarejestruj się</button>
-    </form>
+<div class="container mt-5 text-center">
+    <h1 class="display-4 text-primary">Zarejestruj się w Pitcerni</h1>
+    <p class="lead">Dołącz do nas i zamawiaj najlepsze pizze!</p>
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 600px; background-color: #f8f9fa; border: 2px solid #007bff;">
+        <form method="post" class="account-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p class="text-muted small">
+                Twoje hasło powinno mieć co najmniej 8 znaków oraz zawierać litery i cyfrę
+            </p>
+            <button type="submit" class="btn btn-primary w-100">Zarejestruj się</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

@@ -2,13 +2,22 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Logowanie do Pitcerni</h2>
-    <form method="post" class="form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Zaloguj się</button>
-    </form>
-    <p>Nie masz konta? <a href="{% url 'account_signup' %}">Zarejestruj się</a></p>
+<div class="container mt-5 text-center">
+    <h1 class="display-4 text-primary">Zaloguj się do Pitcerni</h1>
+    <p class="lead">Wpisz swoje dane aby się zalogować</p>
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px; background-color: #f8f9fa; border: 2px solid #007bff;">
+        <form method="post" class="account-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-check mb-3">
+                <input type="checkbox" name="remember" id="remember" class="form-check-input">
+                <label for="remember" class="form-check-label">Zapamiętaj mnie</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Zaloguj się</button>
+        </form>
+        <p class="mt-3">
+            <a href="{% url 'account_reset_password' %}" class="text-primary">Nie pamiętasz hasła?</a>
+        </p>
+    </div>
 </div>
 {% endblock %}

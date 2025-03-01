@@ -46,21 +46,14 @@ class CustomZarejestrujForm(SignupForm):
     
     def clean(self):
         cleaned_data = super().clean()
-        # Ręczne dodanie pól do cleaned_data, jeśli nie są obecne po walidacji allauth
-        if 'phone_country_code' not in cleaned_data:
-            cleaned_data['phone_country_code'] = self.data.get('phone_country_code', '+48')
-        if 'telefon' not in cleaned_data:
-            cleaned_data['telefon'] = self.data.get('telefon', '')
-        if 'ulica' not in cleaned_data:
-            cleaned_data['ulica'] = self.data.get('ulica', '')
-        if 'numer_domu' not in cleaned_data:
-            cleaned_data['numer_domu'] = self.data.get('numer_domu', '')
-        if 'numer_mieszkania' not in cleaned_data:
-            cleaned_data['numer_mieszkania'] = self.data.get('numer_mieszkania', '')
-        if 'kod_pocztowy' not in cleaned_data:
-            cleaned_data['kod_pocztowy'] = self.data.get('kod_pocztowy', '')
-        if 'miasto' not in cleaned_data:
-            cleaned_data['miasto'] = self.data.get('miasto', '')
+        # Ręczne uzupełnienie cleaned_data
+        cleaned_data['phone_country_code'] = self.data.get('phone_country_code', '+48')
+        cleaned_data['telefon'] = self.data.get('telefon', '')
+        cleaned_data['ulica'] = self.data.get('ulica', '')
+        cleaned_data['numer_domu'] = self.data.get('numer_domu', '')
+        cleaned_data['numer_mieszkania'] = self.data.get('numer_mieszkania', '')
+        cleaned_data['kod_pocztowy'] = self.data.get('kod_pocztowy', '')
+        cleaned_data['miasto'] = self.data.get('miasto', '')
         return cleaned_data
     
     def signup(self, request, user):

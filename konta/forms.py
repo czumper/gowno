@@ -8,46 +8,6 @@ COUNTRY_CODES = [
     ('+49', '+49 (Niemcy)'),    
     ('+44', '+44 (Wielka Brytania)'),
     ('+33', '+33 (Francja)'),
-    ('+34', '+34 (Hiszpania)'),
-    ('+39', '+39 (Włochy)'),
-    ('+31', '+31 (Holandia)'),
-    ('+32', '+32 (Belgia)'),
-    ('+41', '+41 (Szwajcaria)'),
-    ('+43', '+43 (Austria)'),
-    ('+420', '+420 (Czechy)'),
-    ('+421', '+421 (Słowacja)'),
-    ('+386', '+386 (Słowenia)'),
-    ('+385', '+385 (Chorwacja)'),
-    ('+387', '+387 (Bośnia i Hercegowina)'),
-    ('+381', '+381 (Serbia)'),
-    ('+382', '+382 (Czarnogóra)'),
-    ('+383', '+383 (Kosowo)'),
-    ('+386', '+386 (Macedonia)'),
-    ('+355', '+355 (Albania)'),
-    ('+30', '+30 (Grecja)'),
-    ('+90', '+90 (Turcja)'),
-    ('+7', '+7 (Rosja)'),
-    ('+380', '+380 (Ukraina)'),
-    ('+373', '+373 (Mołdawia)'),
-    ('+375', '+375 (Białoruś)'),
-    ('+370', '+370 (Litwa)'),
-    ('+371', '+371 (Łotwa)'),
-    ('+372', '+372 (Estonia)'),
-    ('+358', '+358 (Finlandia)'),
-    ('+46', '+46 (Szwecja)'),
-    ('+47', '+47 (Norwegia)'),
-    ('+358', '+358 (Finlandia)'),
-    ('+354', '+354 (Islandia)'),
-    ('+353', '+353 (Irlandia)'),
-    ('+41', '+41 (Liechtenstein)'),
-    ('+43', '+43 (Luksemburg)'),
-    ('+377', '+377 (Monako)'),
-    ('+377', '+377 (Andora)'),
-    ('+376', '+376 (San Marino)'),
-    ('+378', '+378 (Watykan)'),
-    ('+1', '+1 (USA)'),
-    ('+1', '+1 (Kanada)'),
-    ('+52', '+52 (Meksyk)'),
 ]
 
 class CustomZarejestrujForm(SignupForm):
@@ -113,6 +73,47 @@ class CustomLogowanieForm(LoginForm):
         return cleaned_data
 
 class UserProfileForm(forms.ModelForm):
+    phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', required=False)
+    telefon = forms.CharField(max_length=9, label='Numer telefonu', required=False)
+
     class Meta:
         model = UserProfile
-        fields = ['ulica', 'numer_domu', 'numer_mieszkania', 'kod_pocztowy', 'miasto', 'telefon']
+        fields = ['ulica', 'numer_domuu', 'numer_mieszkania', 'kod_pocztowy', 'miasto', 'telefon']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.telefon:
+            if self.instance.telefon.startswith('+48'):
+                self.initial['phone_country_code'] = '+48'
+                self.initial['telefon'] = self.instance.telefon[3:]
+            elif self.instance.telefon.startswith('+49'):
+                self.initial['phone_country_code'] = '+49'
+                self.initial['telefon'] = self.instance.telefon[3:]
+            elif self.instance.telefon.startswith('+44'):
+                self.initial['phone_country_code'] = '+44'
+                self.initial['telefon'] = self.instance.telefon[3:]
+            elif self.instance.telefon.startswith('+33'):
+                self.initial['phone_country_code'] = '+33'
+                self.initial['telefon'] = self.instance.telefon[3:]
+
+    def clean_telefon(self):
+        telefon = self.cleaned_data['telefon']
+        if telefon and (not telefon.isdigit() or len(telefon) != 9):
+            raise forms.ValidationError("Numer telefonu musi mieć dokładnie 9 cyfr.")
+        return telefon
+
+    def clean_kod_pocztowy(self):
+        kod_pocztowy = self.cleaned_data['kod_pocztowy']
+        if not kod_pocztowy[:2].isdigit() or not kod_pocztowy[3:].isdigit() or kod_pocztowy[2] != '-' or len(kod_pocztowy) != 6:
+            raise forms.ValidationError("Kod pocztowy musi być w formacie XX-XXX (np. 12-345).")
+        return kod_pocztowy
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        phone_country_code = self.cleaned_data.get('phone_country_code', '+48')
+        telefon = self.cleaned_data['telefon']
+        if telefon:
+            instance.telefon = f"{phone_country_code}{telefon}"
+        if commit:
+            instance.save()
+        return instance

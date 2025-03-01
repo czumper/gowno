@@ -54,16 +54,16 @@
             var password = $password.val();
             var isValid = true;
 
-            // Walidacja emaila z regexem
+            // Walidacja emaila z regexem 
             var emailRegex = /^[^@.]+@[^@.]+\.[^@.]+$/;
             if (!emailRegex.test(email)) {
-                $('#email_error').text('Wpisz poprawny adres email (np. user@domain.com).');
+                $('#email_error').text('Wpisz poprawny adres email (np. przyklad@domena.pl).');
                 isValid = false;
             } else {
                 $('#email_error').text('');
             }
 
-            // Walidacja hasła (tylko obecność)
+            // Walidacja hasła 
             if (!password) {
                 isValid = false;
             }

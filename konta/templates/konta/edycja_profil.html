@@ -1,11 +1,120 @@
 {% extends "baza.html" %}
+{% load static %}
+
 {% block content %}
 <div class="container mt-5">
     <h1>Edytuj dane</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Zapisz</button>
-    </form>
+    <div class="card shadow-lg p-4">
+        <form method="post" id="edit_profile_form">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="mb-3">
+                <label for="id_ulica" class="form-label">Ulica</label>
+                <input type="text" name="ulica" id="id_ulica" class="form-control" value="{{ form.ulica.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_numer_domu" class="form-label">Numer domu</label>
+                <input type="text" name="numer_domu" id="id_numer_domu" class="form-control" value="{{ form.numer_domu.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_numer_mieszkania" class="form-label">Numer mieszkania (opcjonalne)</label>
+                <input type="text" name="numer_mieszkania" id="id_numer_mieszkania" class="form-control" value="{{ form.numer_mieszkania.value|default:'' }}" style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_kod_pocztowy" class="form-label">Kod pocztowy</label>
+                <input type="text" name="kod_pocztowy" id="id_kod_pocztowy" class="form-control" maxlength="6" value="{{ form.kod_pocztowy.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="kod_pocztowy_error" class="text-danger small"></div>
+            </div>
+            <div class="mb-3">
+                <label for="id_miasto" class="form-label">Miejscowość</label>
+                <input type="text" name="miasto" id="id_miasto" class="form-control" value="{{ form.miasto.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3 d-flex">
+                <div class="me-2">
+                    <label for="id_phone_country_code" class="form-label">Kierunkowy</label>
+                    <select name="phone_country_code" id="id_phone_country_code" class="form-select" style="border: 2px solid black;">
+                        <option value="+48" {% if form.phone_country_code.value == '+48' %}selected{% endif %}>+48 (Polska)</option>
+                        <option value="+49" {% if form.phone_country_code.value == '+49' %}selected{% endif %}>+49 (Niemcy)</option>
+                        <option value="+44" {% if form.phone_country_code.value == '+44' %}selected{% endif %}>+44 (Wielka Brytania)</option>
+                        <option value="+33" {% if form.phone_country_code.value == '+44' %}selected{% endif %}>+33 (Francja)</option>
+                    </select>
+                </div>
+                <div class="flex-grow-1">
+                    <label for="id_telefon" class="form-label">Numer telefonu</label>
+                    <input type="text" name="telefon" id="id_telefon" class="form-control" maxlength="9" value="{{ form.telefon.value|default:'' }}" required style="border: 2px solid black;">
+                    <div id="telefon_error" class="text-danger small"></div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="submit_button" disabled>Zapisz</button>
+        </form>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var $ulica = $('#id_ulica');
+        var $numer_domu = $('#id_numer_domu');
+        var $kod_pocztowy = $('#id_kod_pocztowy');
+        var $city = $('#id_miasto');
+        var $telefon = $('#id_telefon');
+        var $submitButton = $('#submit_button');
+
+        function validateForm() {
+            var ulica = $ulica.val();
+            var numer_domu = $numer_domu.val();
+            var kod_pocztowy = $kod_pocztowy.val();
+            var miasto = $miasto.val();
+            var telefon = $telefon.val();
+            var isValid = true;
+
+            // Walidacja numeru telefonu
+            var phoneRegex = /^[0-9]{9}$/;
+            if (!phoneRegex.test(telefon)) {
+                $('#telefon_error').text('Numer musi mieć dokładnie 9 cyfr.');
+                isValid = false;
+            } else {
+                $('#telefon_error').text('');
+            }
+
+            // Walidacja kodu pocztowego
+            var postalCodeRegex = /^[0-9]{2}-[0-9]{3}$/;
+            if (!postalCodeRegex.test(kod_pocztowy)) {
+                $('#kod_pocztowy_error').text('Kod pocztowy musi być w formacie XX-XXX (np. 12-345).');
+                isValid = false;
+            } else {
+                $('#kod_pocztowy_error').text('');
+            }
+
+            // Walidacja pozostałych pól
+            if (!ulica || !numer_domu || !kod_pocztowy || !miasto || !telefon) {
+                isValid = false;
+            }
+
+            $submitButton.prop('disabled', !isValid);
+        }
+
+        // Automatyczny myślnik w kodzie pocztowym
+        $kod_pocztowy.on('input', function() {
+            var value = $(this).val().replace(/[^0-9]/g, '');
+            if (value.length > 2) {
+                value = value.slice(0, 2) + '-' + value.slice(2, 5);
+            }
+            $(this).val(value);
+            validateForm();
+        });
+
+        $ulica.on('input', validateForm);
+        $numer_domu.on('input', validateForm);
+        $kod_pocztowy.on('input', validateForm);
+        $city.on('input', validateForm);
+        $telefon.on('input', validateForm);
+    });
+</script>
 {% endblock %}

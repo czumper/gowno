@@ -37,18 +37,17 @@ class CustomZarejestrujForm(SignupForm):
             raise forms.ValidationError("Kod pocztowy musi być w formacie XX-XXX (np. 69-420).")
         return kod_pocztowy
     
-    def save(self, request):
-        user = super().save(request)
+    def signup(self, request, user):
+        # Zapisz dodatkowe dane po utworzeniu użytkownika
         UserProfile.objects.create(
             user=user,
-            ulica=self.cleaned_data['ulica'],
-            numer_domu=self.cleaned_data['numer_domu'],
-            numer_mieszkania=self.cleaned_data['numer_mieszkania'],
-            kod_pocztowy=self.cleaned_data['kod_pocztowy'],
-            miasto=self.cleaned_data['miasto'],
-            telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
+            street=self.cleaned_data['ulica'],
+            house_number=self.cleaned_data['numer_domu'],
+            apartment_number=self.cleaned_data['numer_mieszkania'],
+            postal_code=self.cleaned_data['kod_pocztowy'],
+            city=self.cleaned_data['miasto'],
+            phone_number=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
         )
-        return user
 
 class CustomLogowanieForm(LoginForm):
     login = forms.CharField(max_length=20, label='Nazwa użytkownika lub email')

@@ -4,17 +4,23 @@
 {% block content %}
 <div class="container mt-5 text-center">
     <h1 class="display-4 text-primary">Zaloguj się do Pitcerni</h1>
-    <p class="lead">Wpisz swoje dane:</p>
+    <p class="lead">Wpisz swoje dane, by wrócić do pysznych pizz!</p>
     <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px; background-color: #f8f9fa; border: 2px solid #007bff;">
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        {% if "incorrect" in error %}
+                            Błędna nazwa użytkownika/email lub hasło.
+                        {% else %}
+                            {{ error }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endif %}
         <form method="post" class="account-form">
             {% csrf_token %}
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    {% for error in form.non_field_errors %}
-                        {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
             <div class="mb-3">
                 <label for="id_login" class="form-label">Nazwa użytkownika lub email</label>
                 <input type="text" name="login" id="id_login" class="form-control" value="{{ form.login.value|default:'' }}" required style="border: 2px solid black;">

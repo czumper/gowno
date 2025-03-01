@@ -18,6 +18,7 @@
             <div class="mb-3">
                 <label for="id_username" class="form-label">Nazwa użytkownika</label>
                 <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="username_error" class="text-danger small"></div>
             </div>
             <div class="mb-3">
                 <label for="id_email" class="form-label">Email</label>
@@ -34,19 +35,31 @@
                 <input type="password" name="password2" id="id_password2" class="form-control" required style="border: 2px solid black;">
                 <div id="password2_error" class="text-danger small"></div>
             </div>
-            {{ form.ulica.label_tag }}
-            {{ form.ulica }}
-            {{ form.numer_domu.label_tag }}
-            {{ form.numer_domu }}
-            {{ form.numer_mieszkania.label_tag }}
-            {{ form.numer_mieszkania }}
-            {{ form.kod_pocztowy.label_tag }}
-            {{ form.kod_pocztowy }}
-            {{ form.miasto.label_tag }}
-            {{ form.miasto }}
-            {{ form.telefon.label_tag }}
-            {{ form.telefon }}
-            <button type="submit" class="btn btn-primary w-100">Zarejestruj się</button>
+            <div class="mb-3">
+                <label for="id_ulica" class="form-label">Ulica</label>
+                <input type="text" name="ulica" id="id_ulica" class="form-control" value="{{ form.ulica.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_numer_domu" class="form-label">Numer domu</label>
+                <input type="text" name="numer_domu" id="id_numer_domu" class="form-control" value="{{ form.numer_domu.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_numer_mieszkania" class="form-label">Numer mieszkania (opcjonalne)</label>
+                <input type="text" name="numer_mieszkania" id="id_numer_mieszkania" class="form-control" value="{{ form.numer_mieszkania.value|default:'' }}" style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_kod_pocztowy" class="form-label">Kod pocztowy</label>
+                <input type="text" name="kod_pocztowy" id="id_kod_pocztowy" class="form-control" value="{{ form.kod_pocztowy.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_miasto" class="form-label">Miejscowość</label>
+                <input type="text" name="miasto" id="id_miasto" class="form-control" value="{{ form.miasto.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_telefon" class="form-label">Telefon</label>
+                <input type="text" name="telefon" id="id_telefon" class="form-control" value="{{ form.telefon.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="submit_button" disabled>Zarejestruj się</button>
         </form>
     </div>
 </div>
@@ -54,41 +67,92 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Walidacja emaila
-        $('#id_email').on('input', function() {
-            var email = $(this).val();
-            var emailError = $('#email_error');
+        var $username = $('#id_username');
+        var $email = $('#id_email');
+        var $password1 = $('#id_password1');
+        var $password2 = $('#id_password2');
+        var $ulica = $('#id_ulica');
+        var $numer_domu = $('#id_numer_domu');
+        var $kod_pocztowy = $('#id_kod_pocztowy');
+        var $miasto = $('#id_miasto');
+        var $telefon = $('#id_telefon');
+        var $submitButton = $('#submit_button');
+
+        function validateForm() {
+            var username = $username.val();
+            var email = $email.val();
+            var password1 = $password1.val();
+            var password2 = $password2.val();
+            var ulica = $ulica.val();
+            var numer_domu = $numer_domu.val();
+            var kod_pocztowy = $kod_pocztowy.val();
+            var miasto = $miasto.val();
+            var telefon = $telefon.val();
+            var isValid = true;
+
+            // Walidacja nazwy użytkownika
+            if (username.length < 3 || username.includes('@')) {
+                $('#username_error').text('Nazwa musi mieć min. 3 znaki i nie zawierać @.');
+                isValid = false;
+            } else {
+                $.ajax({
+                    url: '/check_username/',
+                    data: { 'username': username },
+                    success: function(response) {
+                        if (response.exists) {
+                            $('#username_error').text('Nazwa użytkownika jest już zajęta.');
+                            isValid = false;
+                        } else {
+                            $('#username_error').text('');
+                        }
+                    }
+                });
+            }
+
+            // Walidacja emaila
             if (!email.includes('@') || !email.includes('.')) {
-                emailError.text('Wpisz poprawny adres email (np. email@dprzyklad.pl).');
+                $('#email_error').text('Wpisz poprawny adres email (np. example@domain.com).');
+                isValid = false;
             } else {
-                emailError.text('');
+                $('#email_error').text('');
             }
-        });
 
-        // Walidacja hasła
-        $('#id_password1').on('input', function() {
-            var password = $(this).val();
-            var passwordError = $('#password1_error');
-            if (password.length < 8) {
-                passwordError.text('Hasło musi mieć co najmniej 8 znaków.');
-            } else if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
-                passwordError.text('Hasło musi zawierać literę i cyfrę.');
+            // Walidacja hasła
+            if (password1.length < 8) {
+                $('#password1_error').text('Hasło musi mieć co najmniej 8 znaków.');
+                isValid = false;
+            } else if (!/[a-zA-Z]/.test(password1) || !/[0-9]/.test(password1)) {
+                $('#password1_error').text('Hasło musi zawierać literę i cyfrę.');
+                isValid = false;
             } else {
-                passwordError.text('');
+                $('#password1_error').text('');
             }
-        });
 
-        // Walidacja powtórzenia hasła
-        $('#id_password2').on('input', function() {
-            var password1 = $('#id_password1').val();
-            var password2 = $(this).val();
-            var password2Error = $('#password2_error');
+            // Walidacja powtórzenia hasła
             if (password1 !== password2) {
-                password2Error.text('Hasła nie są zgodne.');
+                $('#password2_error').text('Hasła nie są zgodne.');
+                isValid = false;
             } else {
-                password2Error.text('');
+                $('#password2_error').text('');
             }
-        });
+
+            // Walidacja pozostałych pól
+            if (!ulica || !numer_domu || !kod_pocztowy || !miasto || !telefon) {
+                isValid = false;
+            }
+
+            $submitButton.prop('disabled', !isValid);
+        }
+
+        $username.on('input', validateForm);
+        $email.on('input', validateForm);
+        $password1.on('input', validateForm);
+        $password2.on('input', validateForm);
+        $ulica.on('input', validateForm);
+        $numer_domu.on('input', validateForm);
+        $kod_pocztowy.on('input', validateForm);
+        $miasto.on('input', validateForm);
+        $telefon.on('input', validateForm);
     });
 </script>
 {% endblock %}

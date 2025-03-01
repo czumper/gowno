@@ -3,6 +3,15 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.contrib.auth import logout
 from .models import UserProfile
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+
+def check_username(request):
+    username = request.GET.get('username', None)
+    data = {
+        'exists': User.objects.filter(username=username).exists()
+    }
+    return JsonResponse(data)
 
 @login_required
 def edytuj_profil(request):

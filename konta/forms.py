@@ -46,12 +46,11 @@ class CustomLogowanieForm(LoginForm):
 
         if login and password:
             if '@' in login:
-                user = authenticate(request=self.request, email=login, password=password)
+                self.user = authenticate(request=self.request, email=login, password=password)
             else:
-                user = authenticate(request=self.request, username=login, password=password)
-            if user is None:
-                raise forms.ValidationError('Niepoprawne dane logowania')
-            self.user = user
+                self.user = authenticate(request=self.request, username=login, password=password)
+            if self.user is None:
+                raise forms.ValidationError("Błędna nazwa użytkownika/email lub hasło.")
         return cleaned_data
 
 class UserProfileForm(forms.ModelForm):

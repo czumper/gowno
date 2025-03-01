@@ -2,6 +2,7 @@ from django import forms
 from allauth.account.forms import SignupForm, LoginForm
 from django.contrib.auth import authenticate
 from .models import UserProfile
+from django.contrib.auth.models import User
 
 COUNTRY_CODES = [
     ('+48', '+48 (Polska)'),
@@ -24,6 +25,12 @@ class CustomZarejestrujForm(SignupForm):
         if '@' in username:
             raise forms.ValidationError('Zabroniony znak')
         return username
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Ten email jest już zajęty.")
+        return email
     
     def clean_telefon(self):
         telefon = self.cleaned_data['telefon']

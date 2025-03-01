@@ -8,7 +8,7 @@ class UserProfile(models.Model):
     numer_mieszkania = models.CharField(max_length=5, blank=True, null=True)
     kod_pocztowy = models.CharField(max_length=6)
     miasto = models.CharField(max_length=40)
-    telefon = models.CharField(max_length=15)
+    telefon = models.CharField(max_length=13)
 
     def __str__(self):
         return self.user.username

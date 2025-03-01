@@ -1,5 +1,5 @@
 {% extends "baza.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
 <div class="container mt-5 text-center">
@@ -8,31 +8,32 @@
     <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px; background-color: #f8f9fa; border: 2px solid #007bff;">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-info">Wysłaliśmy link weryfikacyjny na nowy email. Sprawdź skrzynkę!</div>
+                <div class="alert alert-info">Sprawdź swoją skrzynkę, aby potwierdzić nowy email!</div>
             {% endfor %}
         {% endif %}
-        <form method="post">
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {% if "password" in error|lower %}
+                        Błędne hasło.
+                    {% else %}
+                        {{ error }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" id="email_change_form">
             {% csrf_token %}
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    {% for error in form.non_field_errors %}
-                        {% if "password" in error|lower %}
-                            Błędne hasło.
-                        {% else %}
-                            {{ error }}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endif %}
             <div class="mb-3">
                 <label for="id_email" class="form-label">Nowy email</label>
                 <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="email_error" class="text-danger small"></div>
             </div>
             <div class="mb-3">
                 <label for="id_password" class="form-label">Aktualne hasło</label>
                 <input type="password" name="password" id="id_password" class="form-control" required style="border: 2px solid black;">
             </div>
-            <button type="submit" name="action_add" class="btn btn-primary w-100">Zmień email</button>
+            <button type="submit" name="action_add" class="btn btn-primary w-100" id="submit_button" disabled>Zmień email</button>
         </form>
         {% if current_email %}
             <p class="mt-3">Aktualny email: {{ current_email }}</p>
@@ -40,4 +41,38 @@
         <a href="{% url 'konta:profil' %}" class="btn btn-secondary mt-3">Wróć do profilu</a>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var $email = $('#id_email');
+        var $password = $('#id_password');
+        var $submitButton = $('#submit_button');
+
+        function validateForm() {
+            var email = $email.val();
+            var password = $password.val();
+            var isValid = true;
+
+            // Walidacja emaila z regexem
+            var emailRegex = /^[^@.]+@[^@.]+\.[^@.]+$/;
+            if (!emailRegex.test(email)) {
+                $('#email_error').text('Wpisz poprawny adres email (np. user@domain.com).');
+                isValid = false;
+            } else {
+                $('#email_error').text('');
+            }
+
+            // Walidacja hasła (tylko obecność)
+            if (!password) {
+                isValid = false;
+            }
+
+            $submitButton.prop('disabled', !isValid);
+        }
+
+        $email.on('input', validateForm);
+        $password.on('input', validateForm);
+    });
+</script>
 {% endblock %}

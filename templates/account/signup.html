@@ -77,6 +77,36 @@
         var $miasto = $('#id_miasto');
         var $telefon = $('#id_telefon');
         var $submitButton = $('#submit_button');
+        var usernameValid = false;
+
+        function validateUsername(callback) {
+            var username = $username.val();
+            if (username.length < 3 || username.includes('@')) {
+                $('#username_error').text('Nazwa musi mieć min. 3 znaki i nie zawierać @.');
+                usernameValid = false;
+                callback(false);
+            } else {
+                $.ajax({
+                    url: '{% url "konta:check_username" %}',
+                    data: { 'username': username },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.exists) {
+                            $('#username_error').text('Nazwa użytkownika jest już zajęta.');
+                            usernameValid = false;
+                        } else {
+                            $('#username_error').text('');
+                            usernameValid = true;
+                        }
+                        callback(usernameValid);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Błąd AJAX: " + error);
+                        callback(false);
+                    }
+                });
+            }
+        }
 
         function validateForm() {
             var username = $username.val();
@@ -89,25 +119,6 @@
             var miasto = $miasto.val();
             var telefon = $telefon.val();
             var isValid = true;
-
-            // Walidacja nazwy użytkownika
-            if (username.length < 3 || username.includes('@')) {
-                $('#username_error').text('Nazwa musi mieć min. 3 znaki i nie zawierać @.');
-                isValid = false;
-            } else {
-                $.ajax({
-                    url: '{% url "konta:check_username" %}',
-                    data: { 'username': username },
-                    success: function(response) {
-                        if (response.exists) {
-                            $('#username_error').text('Nazwa użytkownika jest już zajęta.');
-                            isValid = false;
-                        } else {
-                            $('#username_error').text('');
-                        }
-                    }
-                });
-            }
 
             // Walidacja emaila
             if (!email.includes('@') || !email.includes('.')) {
@@ -141,7 +152,10 @@
                 isValid = false;
             }
 
-            $submitButton.prop('disabled', !isValid);
+            validateUsername(function(valid) {
+                isValid = isValid && valid;
+                $submitButton.prop('disabled', !isValid);
+            });
         }
 
         $username.on('input', validateForm);

@@ -37,16 +37,35 @@ class CustomZarejestrujForm(SignupForm):
             raise forms.ValidationError("Kod pocztowy musi być w formacie XX-XXX (np. 69-420).")
         return kod_pocztowy
     
+    def clean(self):
+        cleaned_data = super().clean()
+        # Ręczne dodanie pól do cleaned_data, jeśli nie są obecne po walidacji allauth
+        if 'phone_country_code' not in cleaned_data:
+            cleaned_data['phone_country_code'] = self.data.get('phone_country_code', '+48')
+        if 'telefon' not in cleaned_data:
+            cleaned_data['telefon'] = self.data.get('telefon', '')
+        if 'ulica' not in cleaned_data:
+            cleaned_data['ulica'] = self.data.get('ulica', '')
+        if 'numer_domu' not in cleaned_data:
+            cleaned_data['numer_domu'] = self.data.get('numer_domu', '')
+        if 'numer_mieszkania' not in cleaned_data:
+            cleaned_data['numer_mieszkania'] = self.data.get('numer_mieszkania', '')
+        if 'kod_pocztowy' not in cleaned_data:
+            cleaned_data['kod_pocztowy'] = self.data.get('kod_pocztowy', '')
+        if 'miasto' not in cleaned_data:
+            cleaned_data['miasto'] = self.data.get('miasto', '')
+        return cleaned_data
+    
     def signup(self, request, user):
         # Zapisz dodatkowe dane po utworzeniu użytkownika
         UserProfile.objects.create(
             user=user,
-            street=self.cleaned_data['ulica'],
-            house_number=self.cleaned_data['numer_domu'],
-            apartment_number=self.cleaned_data['numer_mieszkania'],
-            postal_code=self.cleaned_data['kod_pocztowy'],
-            city=self.cleaned_data['miasto'],
-            phone_number=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
+            ulica=self.cleaned_data['ulica'],
+            numer_domu=self.cleaned_data['numer_domu'],
+            numer_mieszkania=self.cleaned_data['numer_mieszkania'],
+            kod_pocztowy=self.cleaned_data['kod_pocztowy'],
+            miasto=self.cleaned_data['miasto'],
+            telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
         )
 
 class CustomLogowanieForm(LoginForm):

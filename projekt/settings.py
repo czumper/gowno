@@ -65,6 +65,8 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[pitcernia.ninja] "
+ACCOUNT_CHANGE_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
 
 ACCOUNT_FORMS = {
     'signup': 'konta.forms.CustomZarejestrujForm',
@@ -168,3 +170,5 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_APPS = ['konta.apps.KontaConfig']

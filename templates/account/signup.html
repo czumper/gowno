@@ -1,19 +1,94 @@
 {% extends "baza.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
 <div class="container mt-5 text-center">
     <h1 class="display-4 text-primary">Zarejestruj się w Pitcerni</h1>
     <p class="lead">Dołącz do nas i zamawiaj najlepsze pizze!</p>
     <div class="card shadow-lg p-4 mx-auto" style="max-width: 600px; background-color: #f8f9fa; border: 2px solid #007bff;">
-        <form method="post" class="account-form">
+        <form method="post" class="account-form" id="signup_form" novalidate>
             {% csrf_token %}
-            {{ form.as_p }}
-            <p class="text-muted small">
-                Twoje hasło powinno mieć co najmniej 8 znaków oraz zawierać litery i cyfrę
-            </p>
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Nazwa użytkownika</label>
+                <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_email" class="form-label">Email</label>
+                <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="email_error" class="text-danger small"></div>
+            </div>
+            <div class="mb-3">
+                <label for="id_password1" class="form-label">Hasło</label>
+                <input type="password" name="password1" id="id_password1" class="form-control" required style="border: 2px solid black;">
+                <div id="password1_error" class="text-danger small"></div>
+            </div>
+            <div class="mb-3">
+                <label for="id_password2" class="form-label">Powtórz hasło</label>
+                <input type="password" name="password2" id="id_password2" class="form-control" required style="border: 2px solid black;">
+                <div id="password2_error" class="text-danger small"></div>
+            </div>
+            {{ form.ulica.label_tag }}
+            {{ form.ulica }}
+            {{ form.numer_domu.label_tag }}
+            {{ form.numer_domu }}
+            {{ form.numer_mieszkania.label_tag }}
+            {{ form.numer_mieszkania }}
+            {{ form.kod_pocztowy.label_tag }}
+            {{ form.kod_pocztowy }}
+            {{ form.miasto.label_tag }}
+            {{ form.miasto }}
+            {{ form.telefon.label_tag }}
+            {{ form.telefon }}
             <button type="submit" class="btn btn-primary w-100">Zarejestruj się</button>
         </form>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Walidacja emaila
+        $('#id_email').on('input', function() {
+            var email = $(this).val();
+            var emailError = $('#email_error');
+            if (!email.includes('@') || !email.includes('.')) {
+                emailError.text('Wpisz poprawny adres email (np. email@dprzyklad.pl).');
+            } else {
+                emailError.text('');
+            }
+        });
+
+        // Walidacja hasła
+        $('#id_password1').on('input', function() {
+            var password = $(this).val();
+            var passwordError = $('#password1_error');
+            if (password.length < 8) {
+                passwordError.text('Hasło musi mieć co najmniej 8 znaków.');
+            } else if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
+                passwordError.text('Hasło musi zawierać literę i cyfrę.');
+            } else {
+                passwordError.text('');
+            }
+        });
+
+        // Walidacja powtórzenia hasła
+        $('#id_password2').on('input', function() {
+            var password1 = $('#id_password1').val();
+            var password2 = $(this).val();
+            var password2Error = $('#password2_error');
+            if (password1 !== password2) {
+                password2Error.text('Hasła nie są zgodne.');
+            } else {
+                password2Error.text('');
+            }
+        });
+    });
+</script>
 {% endblock %}

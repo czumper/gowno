@@ -1,6 +1,9 @@
 Siema {{ user.username }}!
 
-Dzięki za rejestrację w Picerni! Kliknij poniżej, żeby potwierdzić swój email:
+Kliknij poniżej, żeby potwierdzić swój email:
+
 {{ activate_url }}
+
+Jeśli to nie Ty, zignoruj ten email.
 
 Smacznego 🍕

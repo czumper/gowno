@@ -96,7 +96,7 @@
                 isValid = false;
             } else {
                 $.ajax({
-                    url: '/check_username/',
+                    url: '{% url "konta:check_username" %}',
                     data: { 'username': username },
                     success: function(response) {
                         if (response.exists) {

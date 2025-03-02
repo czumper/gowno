@@ -132,7 +132,7 @@
             var isValid = true;
 
             // Walidacja emaila
-            var emailRegex = /^[^@.]+@[^@.]+\.[^@.]+$/;
+            var emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
             if (!emailRegex.test(email)) {
                 $('#email_error').text('Wpisz poprawny adres email (np. example@domain.com).');
                 isValid = false;

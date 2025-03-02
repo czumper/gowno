@@ -12,6 +12,9 @@ COUNTRY_CODES = [
 ]
 
 class CustomZarejestrujForm(SignupForm):
+    def signup(self, request, user):
+        pass
+    """
     username = forms.CharField(max_length=20, label='Nazwa użytkownika')
     ulica = forms.CharField(max_length=40, label='Ulica')
     numer_domu = forms.CharField(max_length=5, label='Numer domu')
@@ -44,17 +47,6 @@ class CustomZarejestrujForm(SignupForm):
             raise forms.ValidationError("Kod pocztowy musi być w formacie XX-XXX (np. 69-420).")
         return kod_pocztowy
     
-    def clean(self):
-        cleaned_data = super().clean()
-        # Ręczne uzupełnienie cleaned_data
-        cleaned_data['phone_country_code'] = self.data.get('phone_country_code', '+48')
-        cleaned_data['telefon'] = self.data.get('telefon', '')
-        cleaned_data['ulica'] = self.data.get('ulica', '')
-        cleaned_data['numer_domu'] = self.data.get('numer_domu', '')
-        cleaned_data['numer_mieszkania'] = self.data.get('numer_mieszkania', '')
-        cleaned_data['kod_pocztowy'] = self.data.get('kod_pocztowy', '')
-        cleaned_data['miasto'] = self.data.get('miasto', '')
-        return cleaned_data
     
     def signup(self, request, user):
         # Zapisz dodatkowe dane po utworzeniu użytkownika
@@ -67,6 +59,8 @@ class CustomZarejestrujForm(SignupForm):
             miasto=self.cleaned_data['miasto'],
             telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
         )
+"""
+        
 
 class CustomLogowanieForm(LoginForm):
     login = forms.CharField(max_length=20, label='Nazwa użytkownika lub email')

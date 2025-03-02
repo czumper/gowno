@@ -8,7 +8,6 @@ COUNTRY_CODES = [
     ('+48', '+48 (Polska)'),
     ('+49', '+49 (Niemcy)'),    
     ('+44', '+44 (Wielka Brytania)'),
-    ('+33', '+33 (Francja)'),
 ]
 
 class CustomZarejestrujForm(SignupForm):
@@ -29,7 +28,7 @@ class CustomZarejestrujForm(SignupForm):
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
         if User.objects.filter(email=email).exists():
-            print(f"Email {email} already exists in the database.")
+            print(f"Email {email} jest zajęty.")
             raise forms.ValidationError("Ten email jest już zajęty.")
         return email
     

@@ -11,53 +11,8 @@ COUNTRY_CODES = [
 ]
 
 class CustomZarejestrujForm(SignupForm):
-    username = forms.CharField(max_length=20, label='Nazwa użytkownika')
-    ulica = forms.CharField(max_length=40, label='Ulica')
-    numer_domu = forms.CharField(max_length=5, label='Numer domu')
-    numer_mieszkania = forms.CharField(max_length=5, label='Numer mieszkania', required=False)
-    kod_pocztowy = forms.CharField(max_length=6, label='Kod pocztowy')
-    miasto = forms.CharField(max_length=40, label='Miasto')
-    phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', required=False)
-    telefon = forms.CharField(max_length=9, label='Telefon')
-    
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        if '@' in username:
-            raise forms.ValidationError('Zabroniony znak')
-        return username
-    
-    def clean_email(self):
-        email = self.cleaned_data.get('email', '')
-        if User.objects.filter(email=email).exists():
-            print(f"Email {email} jest zajęty.")
-            raise forms.ValidationError("Ten email jest już zajęty.")
-        return email
-    
-    def clean_telefon(self):
-        telefon = self.cleaned_data['telefon']
-        if not telefon.isdigit() or len(telefon) != 9:
-            raise forms.ValidationError("Numer telefonu musi mieć dokładnie 9 cyfr.")
-        return telefon
-
-    def clean_kod_pocztowy(self):
-        kod_pocztowy = self.cleaned_data['kod_pocztowy']
-        if not kod_pocztowy[:2].isdigit() or not kod_pocztowy[3:].isdigit() or kod_pocztowy[2] != '-' or len(kod_pocztowy) != 6:
-            raise forms.ValidationError("Kod pocztowy musi być w formacie XX-XXX (np. 69-420).")
-        return kod_pocztowy
-    
-    
     def signup(self, request, user):
-        # Zapisz dodatkowe dane po utworzeniu użytkownika
-        UserProfile.objects.create(
-            user=user,
-            ulica=self.cleaned_data['ulica'],
-            numer_domu=self.cleaned_data['numer_domu'],
-            numer_mieszkania=self.cleaned_data['numer_mieszkania'],
-            kod_pocztowy=self.cleaned_data['kod_pocztowy'],
-            miasto=self.cleaned_data['miasto'],
-            phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', required=False)
-            telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
-        )
+        pass
         
 
 class CustomLogowanieForm(LoginForm):

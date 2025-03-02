@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('accounts/', include('allauth.urls')),
+    path('accounts/signup/', CustomZarejestrujView.as_view(), name='account_signup'),
     path('konta/', include('konta.urls')),
     path('menu/', include('menu.urls')),
 ]

@@ -12,9 +12,6 @@ COUNTRY_CODES = [
 ]
 
 class CustomZarejestrujForm(SignupForm):
-    def signup(self, request, user):
-        pass
-    """
     username = forms.CharField(max_length=20, label='Nazwa użytkownika')
     ulica = forms.CharField(max_length=40, label='Ulica')
     numer_domu = forms.CharField(max_length=5, label='Numer domu')
@@ -32,6 +29,7 @@ class CustomZarejestrujForm(SignupForm):
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
         if User.objects.filter(email=email).exists():
+            print(f"Email {email} already exists in the database.")
             raise forms.ValidationError("Ten email jest już zajęty.")
         return email
     
@@ -59,7 +57,6 @@ class CustomZarejestrujForm(SignupForm):
             miasto=self.cleaned_data['miasto'],
             telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
         )
-"""
         
 
 class CustomLogowanieForm(LoginForm):

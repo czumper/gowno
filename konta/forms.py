@@ -17,6 +17,7 @@ class CustomZarejestrujForm(SignupForm):
     numer_mieszkania = forms.CharField(max_length=5, label='Numer mieszkania', required=False)
     kod_pocztowy = forms.CharField(max_length=6, label='Kod pocztowy')
     miasto = forms.CharField(max_length=40, label='Miasto')
+    phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', required=False)
     telefon = forms.CharField(max_length=9, label='Telefon')
     
     def clean_username(self):
@@ -54,6 +55,7 @@ class CustomZarejestrujForm(SignupForm):
             numer_mieszkania=self.cleaned_data['numer_mieszkania'],
             kod_pocztowy=self.cleaned_data['kod_pocztowy'],
             miasto=self.cleaned_data['miasto'],
+            phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', required=False)
             telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
         )
         

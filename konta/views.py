@@ -7,6 +7,19 @@ from .models import UserProfile
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 
+
+class CustomZarejestrujView(SignupView):
+    form_class = CustomZarejestrujForm
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            form.add_error('email', 'Ten email jest już zajęty.')
+            return self.form_invalid(form)
+        # Jeśli email jest unikalny, zapisz użytkownika
+        self.user = form.save(self.request)
+        return super().form_valid(form)
+    
 def check_username(request):
     username = request.GET.get('username', None)
     data = {
@@ -14,16 +27,6 @@ def check_username(request):
     }
     return JsonResponse(data)
 
-def register(request):
-    if request.method == 'POST':
-        form = CustomZarejestrujForm(request.POST)
-        if form.is_valid():
-            user = form.save(request)
-            login(request, user)
-            return redirect('home')
-    else:
-        form = CustomZarejestrujForm()
-    return render(request, 'account/signup.html', {'form': form})
 
 @login_required
 def edytuj_profil(request):

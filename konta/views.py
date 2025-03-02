@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import UserProfileForm
+from .forms import UserProfileForm, CustomZarejestrujForm
+from django.contrib.auth import login
 from django.contrib.auth import logout
 from .models import UserProfile
 from django.http import JsonResponse
@@ -12,6 +13,17 @@ def check_username(request):
         'exists': User.objects.filter(username=username).exists()
     }
     return JsonResponse(data)
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomZarejestrujForm(request.POST)
+        if form.is_valid():
+            user = form.save(request)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = CustomZarejestrujForm()
+    return render(request, 'account/signup.html', {'form': form})
 
 @login_required
 def edytuj_profil(request):

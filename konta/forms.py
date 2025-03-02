@@ -11,8 +11,49 @@ COUNTRY_CODES = [
 ]
 
 class CustomZarejestrujForm(SignupForm):
+    username = forms.CharField(max_length=30, label='Nazwa użytkownika')
+    ulica = forms.CharField(max_length=100, label='Ulica')
+    numer_domu = forms.CharField(max_length=10, label='Numer domu')
+    numer_mieszkania = forms.CharField(max_length=10, label='Numer mieszkania', required=False)
+    kod_pocztowy = forms.CharField(max_length=6, label='Kod pocztowy')
+    miasto = forms.CharField(max_length=50, label='Miejscowość')
+    phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', initial='+48')
+    telefon = forms.CharField(max_length=9, label='Numer telefonu')
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '')
+        if '@' in username:
+            raise forms.ValidationError("Nazwa użytkownika nie może zawierać znaku '@'.")
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Ten email jest już zajęty.")
+        return email
+
+    def clean_telefon(self):
+        telefon = self.cleaned_data.get('telefon', '')
+        if not telefon.isdigit() or len(telefon) != 9:
+            raise forms.ValidationError("Numer telefonu musi mieć dokładnie 9 cyfr.")
+        return telefon
+
+    def clean_kod_pocztowy(self):
+        kod_pocztowy = self.cleaned_data.get('kod_pocztowy', '')
+        if not kod_pocztowy[:2].isdigit() or not kod_pocztowy[3:].isdigit() or kod_pocztowy[2] != '-' or len(kod_pocztowy) != 6:
+            raise forms.ValidationError("Kod pocztowy musi być w formacie XX-XXX (np. 12-345).")
+        return kod_pocztowy
+
     def signup(self, request, user):
-        pass
+        UserProfile.objects.create(
+            user=user,
+            ulica=self.cleaned_data['ulica'],
+            numer_domu=self.cleaned_data['numer_domu'],
+            numer_mieszkania=self.cleaned_data.get('numer_mieszkania', ''),
+            kod_pocztowy=self.cleaned_data['kod_pocztowy'],
+            miasto=self.cleaned_data['miasto'],
+            telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
+        )
         
 
 class CustomLogowanieForm(LoginForm):

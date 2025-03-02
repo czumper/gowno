@@ -1,5 +1,5 @@
 {% extends "baza.html" %}
-{% load static %}
+{% load i18n static %}
 
 {% block content %}
 <div class="container mt-5 text-center">
@@ -13,33 +13,200 @@
                     {% for error in form.non_field_errors %}
                         {{ error }}
                     {% endfor %}
-                    {% for field in form %}
-                        {% if field.errors %}
-                            {% for error in field.errors %}
-                                {{ field.label }}: {{ error }}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
                 </div>
             {% endif %}
             <div class="mb-3">
                 <label for="id_username" class="form-label">Nazwa użytkownika</label>
                 <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="username_error" class="text-danger small"></div>
             </div>
             <div class="mb-3">
                 <label for="id_email" class="form-label">Email</label>
                 <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="email_error" class="text-danger small"></div>
             </div>
             <div class="mb-3">
                 <label for="id_password1" class="form-label">Hasło</label>
                 <input type="password" name="password1" id="id_password1" class="form-control" required style="border: 2px solid black;">
+                <div id="password1_error" class="text-danger small"></div>
             </div>
             <div class="mb-3">
                 <label for="id_password2" class="form-label">Powtórz hasło</label>
                 <input type="password" name="password2" id="id_password2" class="form-control" required style="border: 2px solid black;">
+                <div id="password2_error" class="text-danger small"></div>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Zarejestruj się</button>
+            <div class="mb-3">
+                <label for="id_ulica" class="form-label">Ulica</label>
+                <input type="text" name="ulica" id="id_ulica" class="form-control" value="{{ form.ulica.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_numer_domu" class="form-label">Numer domu</label>
+                <input type="text" name="numer_domu" id="id_numer_domu" class="form-control" value="{{ form.numer_domu.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_numer_mieszkania" class="form-label">Numer mieszkania (opcjonalne)</label>
+                <input type="text" name="numer_mieszkania" id="id_numer_mieszkania" class="form-control" value="{{ form.numer_mieszkania.value|default:'' }}" style="border: 2px solid black;">
+            </div>
+            <div class="mb-3">
+                <label for="id_kod_pocztowy" class="form-label">Kod pocztowy</label>
+                <input type="text" name="kod_pocztowy" id="id_kod_pocztowy" class="form-control" maxlength="6" value="{{ form.kod_pocztowy.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="kod_pocztowy_error" class="text-danger small"></div>            </div>
+            <div class="mb-3">
+                <label for="id_miasto" class="form-label">Miejscowość</label>
+                <input type="text" name="miasto" id="id_miasto" class="form-control" value="{{ form.miasto.value|default:'' }}" required style="border: 2px solid black;">
+            </div>
+            <div class="mb-3 d-flex">
+                <div class="me-2">
+                    <label for="id_phone_country_code" class="form-label">Kierunkowy</label>
+                    <select name="phone_country_code" id="id_phone_country_code" class="form-select" style="border: 2px solid black;">
+                        <option value="+48" {% if form.phone_country_code.value == '+48' %}selected{% endif %}>+48 (Polska)</option>
+                        <option value="+49" {% if form.phone_country_code.value == '+49' %}selected{% endif %}>+49 (Niemcy)</option>
+                        <option value="+44" {% if form.phone_country_code.value == '+44' %}selected{% endif %}>+44 (Wielka Brytania)</option>
+                    </select>
+                </div>
+                <div class="flex-grow-1">
+                    <label for="id_telefon" class="form-label">Numer telefonu</label>
+                    <input type="text" name="telefon" id="id_telefon" class="form-control" maxlength="9" value="{{ form.telefon.value|default:'' }}" required style="border: 2px solid black;">
+                    <div id="telefon_error" class="text-danger small"></div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="submit_button" disabled>Zarejestruj się</button>
         </form>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var $username = $('#id_username');
+        var $email = $('#id_email');
+        var $password1 = $('#id_password1');
+        var $password2 = $('#id_password2');
+        var $ulica = $('#id_ulica');
+        var $numer_domu = $('#id_numer_domu');
+        var $kod_pocztowy = $('#id_kod_pocztowy');
+        var $miasto = $('#id_miasto');
+        var $telefon = $('#id_telefon');
+        var $submitButton = $('#submit_button');
+        var usernameValid = false;
+
+        function validateUsername(callback) {
+            var username = $username.val();
+            if (username.length < 3 || username.includes('@')) {
+                $('#username_error').text('Nazwa musi mieć min. 3 znaki i nie zawierać @.');
+                usernameValid = false;
+                callback(false);
+            } else {
+                $.ajax({
+                    url: '{% url "konta:check_username" %}',
+                    data: { 'username': username },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.exists) {
+                            $('#username_error').text('Nazwa użytkownika jest już zajęta.');
+                            usernameValid = false;
+                        } else {
+                            $('#username_error').text('');
+                            usernameValid = true;
+                        }
+                        callback(usernameValid);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Błąd AJAX: " + error);
+                        callback(false);
+                    }
+                });
+            }
+        }
+
+        function validateForm() {
+            var username = $username.val();
+            var email = $email.val();
+            var password1 = $password1.val();
+            var password2 = $password2.val();
+            var ulica = $ulica.val();
+            var numer_domu = $numer_domu.val();
+            var kod_pocztowy = $kod_pocztowy.val();
+            var miasto = $miasto.val();
+            var telefon = $telefon.val();
+            var isValid = true;
+
+            // Walidacja emaila
+            var emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+            if (!emailRegex.test(email)) {
+                $('#email_error').text('Wpisz poprawny adres email (np. example@domain.com).');
+                isValid = false;
+            } else {
+                $('#email_error').text('');
+            }
+
+            // Walidacja hasła
+            if (password1.length < 8) {
+                $('#password1_error').text('Hasło musi mieć co najmniej 8 znaków.');
+                isValid = false;
+            } else if (!/[a-zA-Z]/.test(password1) || !/[0-9]/.test(password1)) {
+                $('#password1_error').text('Hasło musi zawierać literę i cyfrę.');
+                isValid = false;
+            } else {
+                $('#password1_error').text('');
+            }
+
+            // Walidacja powtórzenia hasła
+            if (password1 !== password2) {
+                $('#password2_error').text('Hasła nie są zgodne.');
+                isValid = false;
+            } else {
+                $('#password2_error').text('');
+            }
+
+            // Walidacja numeru telefonu
+            var phoneRegex = /^[0-9]{9}$/;
+            if (!phoneRegex.test(telefon)) {
+                $('#telefon_error').text('Numer musi mieć dokładnie 9 cyfr.');
+                isValid = false;
+            } else {
+                $('#telefon_error').text('');
+            }
+
+            // Walidacja kodu pocztowego
+            var postalCodeRegex = /^[0-9]{2}-[0-9]{3}$/;
+            if (!postalCodeRegex.test(kod_pocztowy)) {
+                $('#kod_pocztowy_error').text('Kod pocztowy musi być w formacie XX-XXX (np. 12-345).');
+                isValid = false;
+            } else {
+                $('#kod_pocztowy_error').text('');
+            }
+
+            // Walidacja pozostałych pól
+            if (!ulica || !numer_domu || !kod_pocztowy || !miasto || !telefon) {
+                isValid = false;
+            }
+
+            validateUsername(function(valid) {
+                isValid = isValid && valid;
+                $submitButton.prop('disabled', !isValid);
+            });
+        }
+
+        // Automatyczny myślnik w kodzie pocztowym
+        $kod_pocztowy.on('input', function() {
+            var value = $(this).val().replace(/[^0-9]/g, ''); // Usuń nie-cyfry
+            if (value.length > 2) {
+                value = value.slice(0, 2) + '-' + value.slice(2, 5);
+            }
+            $(this).val(value);
+            validateForm();
+        });
+
+        $username.on('input', validateForm);
+        $email.on('input', validateForm);
+        $password1.on('input', validateForm);
+        $password2.on('input', validateForm);
+        $ulica.on('input', validateForm);
+        $numer_domu.on('input', validateForm);
+        $kod_pocztowy.on('input', validateForm);
+        $miasto.on('input', validateForm);
+        $telefon.on('input', validateForm);
+    });
+</script>
 {% endblock %}

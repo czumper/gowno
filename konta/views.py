@@ -19,7 +19,8 @@ class CustomZarejestrujView(SignupView):
             return self.form_invalid(form)
         # Jeśli email jest unikalny, zapisz użytkownika
         self.user = form.save(self.request)
-        return super().form_valid(form)
+        send_email_confirmation(self.request, self.user, signup=True)
+        return redirect(self.get_success_url())
     
 def check_username(request):
     username = request.GET.get('username', None)

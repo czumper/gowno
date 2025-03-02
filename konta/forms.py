@@ -28,6 +28,7 @@ class CustomZarejestrujForm(SignupForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
+        print(f"Sprawdzanie emaila: {email}")
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Ten email jest już zajęty.")
         return email

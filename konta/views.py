@@ -6,6 +6,7 @@ from django.contrib.auth import logout
 from .models import UserProfile
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from allauth.account.views import SignupView
 
 
 class CustomZarejestrujView(SignupView):

@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'konta',
+    'konta.apps.KontaConfig',
     'menu',
     'zamowienia',
     'django.contrib.sites',
@@ -68,8 +68,8 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[pitcernia.ninja] "
 ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False  
-ACCOUNT_LOGIN_ON_SIGNUP = False  
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False  # Wyłącz logowanie po weryfikacji
+ACCOUNT_LOGIN_ON_SIGNUP = False  # Wyłącz logowanie po rejestracji
 ACCOUNT_SIGNUP_REDIRECT_URL = '/accounts/confirm-email/'
 
 ACCOUNT_FORMS = {

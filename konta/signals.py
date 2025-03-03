@@ -20,20 +20,16 @@ User = get_user_model()
 
 @receiver(email_confirmed)
 def handle_email_confirmed(sender, request, email_address, **kwargs):
-    try:
-        temp_user = TempUser.objects.get(email=email_address.email)
+    profile_data = request.session.get('profile_data', {})
+    if profile_data and profile_data.get('email') == email_address.email:
         user = User.objects.get(email=email_address.email)
         UserProfile.objects.create(
             user=user,
-            ulica=temp_user.ulica,
-            numer_domu=temp_user.numer_domu,
-            numer_mieszkania=temp_user.numer_mieszkania,
-            kod_pocztowy=temp_user.kod_pocztowy,
-            miasto=temp_user.miasto,
-            telefon=temp_user.telefon,
+            ulica=profile_data['ulica'],
+            numer_domu=profile_data['numer_domu'],
+            numer_mieszkania=profile_data.get('numer_mieszkania', ''),
+            kod_pocztowy=profile_data['kod_pocztowy'],
+            miasto=profile_data['miasto'],
+            telefon=profile_data['telefon'],
         )
-        user.is_active = True  # Aktywuj użytkownika po weryfikacji
-        user.save()
-        temp_user.delete()
-    except TempUser.DoesNotExist:
-        pass  # Jeśli nie ma w TempUser, to już zweryfikowany użytkownik
+        del request.session['profile_data']

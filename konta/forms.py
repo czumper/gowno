@@ -31,13 +31,13 @@ class CustomSignupForm(SignupForm):
         username = self.cleaned_data.get('username', '')
         if '@' in username:
             raise forms.ValidationError("Nazwa użytkownika nie może zawierać znaku '@'.")
-        if User.objects.filter(username=username).exists() or TempUser.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             raise forms.ValidationError("Ta nazwa użytkownika jest już zajęta.")
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
-        if User.objects.filter(email=email).exists() or TempUser.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Ten email jest już zajęty.")
         return email
 
@@ -53,24 +53,26 @@ class CustomSignupForm(SignupForm):
             raise forms.ValidationError("Kod pocztowy musi być w formacie XX-XXX (np. 12-345).")
         return kod_pocztowy
     
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        if email and (User.objects.filter(email=email).exists() or EmailAddress.objects.filter(email=email).exists()):
+            raise forms.ValidationError("Ten email jest już zajęty.")
+        return cleaned_data
 
     def save(self, request):
-        temp_user = TempUser(
-            username=self.cleaned_data['username'],
-            email=self.cleaned_data['email'],
-            password=make_password(self.cleaned_data['password1']),
-            ulica=self.cleaned_data['ulica'],
-            numer_domu=self.cleaned_data['numer_domu'],
-            numer_mieszkania=self.cleaned_data.get('numer_mieszkania', ''),
-            kod_pocztowy=self.cleaned_data['kod_pocztowy'],
-            miasto=self.cleaned_data['miasto'],
-            telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
-        )
-        temp_user.save()
-        # Zapisz użytkownika w allauth, ale bez profilu – profil dodamy po weryfikacji
+        # Zapisz użytkownika w allauth
         user = super().save(request)
-        user.is_active = False  # Wyłączamy użytkownika do weryfikacji
-        user.save()
+        # Przechowaj dane w sesji
+        request.session['profile_data'] = {
+            'ulica': self.cleaned_data['ulica'],
+            'numer_domu': self.cleaned_data['numer_domu'],
+            'numer_mieszkania': self.cleaned_data.get('numer_mieszkania', ''),
+            'kod_pocztowy': self.cleaned_data['kod_pocztowy'],
+            'miasto': self.cleaned_data['miasto'],
+            'telefon': f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
+            'email': self.cleaned_data['email'],  # Dodajemy email do sesji dla pewności
+        }
         return user
 """
 class CustomSignupForm(SignupForm):

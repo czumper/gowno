@@ -7,4 +7,5 @@ urlpatterns = [
     path('edytuj/', views.edytuj_profil, name='edytuj_profil'),
     path('usun/', views.usun_konto, name='usun_konto'),
     path('check_username/', views.check_username, name='check_username'),
+    path('verify/<str:key>/', views.verify_email, name='verify_email'),
 ]

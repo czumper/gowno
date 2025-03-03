@@ -10,9 +10,19 @@
             {% csrf_token %}
             {% if form.errors %}
                 <div class="alert alert-danger">
-                    {% for error in form.non_field_errors %}
-                        {{ error }}
-                    {% endfor %}
+                    <strong>Błąd:</strong>
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        {% for field in form %}
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 </div>
             {% endif %}
             <div class="mb-3">
@@ -50,7 +60,8 @@
             <div class="mb-3">
                 <label for="id_kod_pocztowy" class="form-label">Kod pocztowy</label>
                 <input type="text" name="kod_pocztowy" id="id_kod_pocztowy" class="form-control" maxlength="6" value="{{ form.kod_pocztowy.value|default:'' }}" required style="border: 2px solid black;">
-                <div id="kod_pocztowy_error" class="text-danger small"></div>            </div>
+                <div id="kod_pocztowy_error" class="text-danger small"></div>
+            </div>
             <div class="mb-3">
                 <label for="id_miasto" class="form-label">Miejscowość</label>
                 <input type="text" name="miasto" id="id_miasto" class="form-control" value="{{ form.miasto.value|default:'' }}" required style="border: 2px solid black;">
@@ -70,7 +81,7 @@
                     <div id="telefon_error" class="text-danger small"></div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100" id="submit_button" disabled>Zarejestruj się</button>
+            <button type="submit" class="btn btn-primary w-100" id="submit_button">Zarejestruj się</button>
         </form>
     </div>
 </div>
@@ -131,7 +142,6 @@
             var telefon = $telefon.val();
             var isValid = true;
 
-            // Walidacja emaila
             var emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
             if (!emailRegex.test(email)) {
                 $('#email_error').text('Wpisz poprawny adres email (np. example@domain.com).');
@@ -140,7 +150,6 @@
                 $('#email_error').text('');
             }
 
-            // Walidacja hasła
             if (password1.length < 8) {
                 $('#password1_error').text('Hasło musi mieć co najmniej 8 znaków.');
                 isValid = false;
@@ -151,7 +160,6 @@
                 $('#password1_error').text('');
             }
 
-            // Walidacja powtórzenia hasła
             if (password1 !== password2) {
                 $('#password2_error').text('Hasła nie są zgodne.');
                 isValid = false;
@@ -159,7 +167,6 @@
                 $('#password2_error').text('');
             }
 
-            // Walidacja numeru telefonu
             var phoneRegex = /^[0-9]{9}$/;
             if (!phoneRegex.test(telefon)) {
                 $('#telefon_error').text('Numer musi mieć dokładnie 9 cyfr.');
@@ -168,7 +175,6 @@
                 $('#telefon_error').text('');
             }
 
-            // Walidacja kodu pocztowego
             var postalCodeRegex = /^[0-9]{2}-[0-9]{3}$/;
             if (!postalCodeRegex.test(kod_pocztowy)) {
                 $('#kod_pocztowy_error').text('Kod pocztowy musi być w formacie XX-XXX (np. 12-345).');
@@ -177,7 +183,6 @@
                 $('#kod_pocztowy_error').text('');
             }
 
-            // Walidacja pozostałych pól
             if (!ulica || !numer_domu || !kod_pocztowy || !miasto || !telefon) {
                 isValid = false;
             }
@@ -188,9 +193,8 @@
             });
         }
 
-        // Automatyczny myślnik w kodzie pocztowym
         $kod_pocztowy.on('input', function() {
-            var value = $(this).val().replace(/[^0-9]/g, ''); // Usuń nie-cyfry
+            var value = $(this).val().replace(/[^0-9]/g, '');
             if (value.length > 2) {
                 value = value.slice(0, 2) + '-' + value.slice(2, 5);
             }

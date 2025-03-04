@@ -1,7 +1,11 @@
 from django import forms
 from allauth.account.forms import SignupForm, LoginForm
 from django.contrib.auth import authenticate
+import logging
+from django.contrib.auth.models import User
 from .models import UserProfile
+
+
 
 class CustomZarejestrujForm(SignupForm):
     username = forms.CharField(max_length=20, label='Nazwa użytkownika')

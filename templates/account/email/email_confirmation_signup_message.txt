@@ -1,8 +1,0 @@
-Cześć!
-
-Próbowałeś zarejestrować się w Pitcerni z emailem {{ email }}, ale ten adres jest już zajęty. Jeśli to Twój email, spróbuj się zalogować lub zresetować hasło tutaj: {{ password_reset_url }}.
-
-Jeśli to nie Ty, zignoruj ten email.
-
-Smacznego,
-Ekipa Pitcerni 🍕

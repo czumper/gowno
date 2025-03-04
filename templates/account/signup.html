@@ -66,20 +66,11 @@
                 <label for="id_miasto" class="form-label">Miejscowość</label>
                 <input type="text" name="miasto" id="id_miasto" class="form-control" value="{{ form.miasto.value|default:'' }}" required style="border: 2px solid black;">
             </div>
-            <div class="mb-3 d-flex">
-                <div class="me-2">
-                    <label for="id_phone_country_code" class="form-label">Kierunkowy</label>
-                    <select name="phone_country_code" id="id_phone_country_code" class="form-select" style="border: 2px solid black;">
-                        <option value="+48" {% if form.phone_country_code.value == '+48' %}selected{% endif %}>+48 (Polska)</option>
-                        <option value="+49" {% if form.phone_country_code.value == '+49' %}selected{% endif %}>+49 (Niemcy)</option>
-                        <option value="+44" {% if form.phone_country_code.value == '+44' %}selected{% endif %}>+44 (Wielka Brytania)</option>
-                    </select>
-                </div>
-                <div class="flex-grow-1">
-                    <label for="id_telefon" class="form-label">Numer telefonu</label>
-                    <input type="text" name="telefon" id="id_telefon" class="form-control" maxlength="9" value="{{ form.telefon.value|default:'' }}" required style="border: 2px solid black;">
-                    <div id="telefon_error" class="text-danger small"></div>
-                </div>
+            <div class="mb-3">
+                <label for="id_telefon" class="form-label">Numer telefonu</label>
+                <input type="text" name="telefon" id="id_telefon" class="form-control" maxlength="9" value="{{ form.telefon.value|default:'' }}" required style="border: 2px solid black;">
+                <div id="telefon_error" class="text-danger small"></div>
+            </div>
             </div>
             <button type="submit" class="btn btn-primary w-100" id="submit_button">Zarejestruj się</button>
         </form>

@@ -56,17 +56,16 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+
 LOGIN_REDIRECT_URL = '/'  
 LOGOUT_REDIRECT_URL = '/'  
 
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[pitcernia.ninja] "
-ACCOUNT_CHANGE_EMAIL = True
-ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
 
 ACCOUNT_FORMS = {
     'signup': 'konta.forms.CustomZarejestrujForm',
@@ -171,4 +170,4 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DEFAULT_APPS = ['konta.apps.KontaConfig']
+

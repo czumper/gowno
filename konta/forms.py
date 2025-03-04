@@ -5,7 +5,12 @@ import logging
 from django.contrib.auth.models import User
 from .models import UserProfile
 
-
+NUMERY_KIERUNKOWE = [
+    ('+48', '+48 (Polska)'),
+    ('+44', '+44 (Wielka Brytania)'),
+    ('+49', '+49 (Niemcy)'),
+    ('+33', '+33 (Francja)'),
+]
 
 class CustomZarejestrujForm(SignupForm):
     username = forms.CharField(max_length=20, label='Nazwa użytkownika')
@@ -22,6 +27,12 @@ class CustomZarejestrujForm(SignupForm):
             raise forms.ValidationError('Zabroniony znak')
         return username
     
+    def clean_telefon(self):
+        telefon = self.cleaned_data['telefon']
+        if not telefon.isdigit() or len(telefon) != 9:
+            raise forms.ValidationError('Numer telefonu musi mieć dokładnie 9 cyfr.')
+        return telefon
+    
     def save(self, request):
         user = super().save(request)
         UserProfile.objects.create(
@@ -31,7 +42,7 @@ class CustomZarejestrujForm(SignupForm):
             numer_mieszkania=self.cleaned_data['numer_mieszkania'],
             kod_pocztowy=self.cleaned_data['kod_pocztowy'],
             miasto=self.cleaned_data['miasto'],
-            telefon=self.cleaned_data['telefon']
+            phone_number=f"{self.cleaned_data['telefon_numer_kierunkowy']}{self.cleaned_data['telefon']}",
         )
         return user
 

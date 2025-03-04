@@ -37,12 +37,12 @@
             </div>
             <div class="mb-3 d-flex">
                 <div class="me-2">
-                    <label for="id_phone_country_code" class="form-label">Kierunkowy</label>
-                    <select name="phone_country_code" id="id_phone_country_code" class="form-select" style="border: 2px solid black;">
-                        <option value="+48" {% if form.phone_country_code.value == '+48' %}selected{% endif %}>+48 (Polska)</option>
-                        <option value="+49" {% if form.phone_country_code.value == '+49' %}selected{% endif %}>+49 (Niemcy)</option>
-                        <option value="+44" {% if form.phone_country_code.value == '+44' %}selected{% endif %}>+44 (Wielka Brytania)</option>
-                        <option value="+33" {% if form.phone_country_code.value == '+44' %}selected{% endif %}>+33 (Francja)</option>
+                    <label for="id_telefon_numer_kierunkowy" class="form-label">Kierunkowy</label>
+                    <select name="telefon_numer_kierunkowy" id="id_telefon_numer_kierunkowy" class="form-select" style="border: 2px solid black;">
+                        <option value="+48" {% if form.telefon_numer_kierunkowy.value == '+48' %}selected{% endif %}>+48 (Polska)</option>
+                        <option value="+49" {% if form.telefon_numer_kierunkowy.value == '+49' %}selected{% endif %}>+49 (Niemcy)</option>
+                        <option value="+44" {% if form.telefon_numer_kierunkowy.value == '+44' %}selected{% endif %}>+44 (Wielka Brytania)</option>
+                        <option value="+33" {% if form.telefon_numer_kierunkowy.value == '+44' %}selected{% endif %}>+33 (Francja)</option>
                     </select>
                 </div>
                 <div class="flex-grow-1">

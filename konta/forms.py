@@ -1,9 +1,10 @@
 from django import forms
-from allauth.account.forms import SignupForm, LoginForm
+from allauth.account.forms import SignupForm, LoginForm, ChangeEmailForm
 from django.contrib.auth import authenticate
 import logging
 from django.contrib.auth.models import User
 from .models import UserProfile
+from allauth.account.models import EmailAddress
 
 COUNTRY_CODES = [
     ('+48', '+48 (Polska)'),
@@ -102,3 +103,22 @@ class UserProfileForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+class CustomChangeEmailForm(ChangeEmailForm):
+    password = forms.CharField(label="Aktualne hasło", widget=forms.PasswordInput)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if EmailAddress.objects.filter(email=email).exclude(user=self.user).exists():
+            raise forms.ValidationError("Ten adres email jest już zajęty przez inne konto.")
+        return email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        email = cleaned_data.get('email')
+
+        if password and email:
+            if not self.user.check_password(password):
+                raise forms.ValidationError("Podane hasło jest nieprawidłowe.")
+        return cleaned_data

@@ -5,7 +5,7 @@ import logging
 from django.contrib.auth.models import User
 from .models import UserProfile
 
-NUMERY_KIERUNKOWE = [
+COUNTRY_CODES = [
     ('+48', '+48 (Polska)'),
     ('+44', '+44 (Wielka Brytania)'),
     ('+49', '+49 (Niemcy)'),
@@ -42,7 +42,7 @@ class CustomZarejestrujForm(SignupForm):
             numer_mieszkania=self.cleaned_data['numer_mieszkania'],
             kod_pocztowy=self.cleaned_data['kod_pocztowy'],
             miasto=self.cleaned_data['miasto'],
-            phone_number=f"{self.cleaned_data['telefon_numer_kierunkowy']}{self.cleaned_data['telefon']}",
+            telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
         )
         return user
 

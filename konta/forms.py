@@ -1,5 +1,5 @@
 from django import forms
-from allauth.account.forms import SignupForm, LoginForm, ChangeEmailForm
+from allauth.account.forms import SignupForm, LoginForm, AddEmailForm
 from django.contrib.auth import authenticate
 import logging
 from django.contrib.auth.models import User
@@ -104,7 +104,7 @@ class UserProfileForm(forms.ModelForm):
             instance.save()
         return instance
     
-class CustomChangeEmailForm(ChangeEmailForm):
+class CustomAddEmailForm(AddEmailForm):
     password = forms.CharField(label="Aktualne hasło", widget=forms.PasswordInput)
 
     def clean_email(self):

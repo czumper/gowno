@@ -75,7 +75,7 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  # 1 dzień na potwierdzenie emaila
 ACCOUNT_FORMS = {
     'signup': 'konta.forms.CustomZarejestrujForm',
     'login': 'konta.forms.CustomLogowanieForm',
-    'change_email': 'konta.forms.CustomChangeEmailForm',
+    'change_email': 'konta.forms.CustomAddEmailForm',
 }
 
 MIDDLEWARE = [

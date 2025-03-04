@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'konta',
+    'konta.apps.KontaConfig',
     'menu',
     'zamowienia',
     'django.contrib.sites',
@@ -66,6 +66,10 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[pitcernia.ninja] "
+ACCOUNT_MAX_EMAIL_ADDRESSES = 1  # Maksymalnie jeden email
+ACCOUNT_PREVENT_ENUMERATION = True  # Ochrona przed zgadywaniem emaili
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180  # 3 minuty cooldown przy zmianie emaila
+ACCOUNT_CHANGE_EMAIL = True
 
 ACCOUNT_FORMS = {
     'signup': 'konta.forms.CustomZarejestrujForm',

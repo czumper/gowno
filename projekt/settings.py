@@ -70,6 +70,7 @@ ACCOUNT_MAX_EMAIL_ADDRESSES = 1  # Maksymalnie jeden email
 ACCOUNT_PREVENT_ENUMERATION = True  # Ochrona przed zgadywaniem emaili
 ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180  # 3 minuty cooldown przy zmianie emaila
 ACCOUNT_CHANGE_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  # 1 dzień na potwierdzenie emaila
 
 ACCOUNT_FORMS = {
     'signup': 'konta.forms.CustomZarejestrujForm',

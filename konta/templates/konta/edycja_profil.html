@@ -63,6 +63,7 @@
         var $numer_domu = $('#id_numer_domu');
         var $kod_pocztowy = $('#id_kod_pocztowy');
         var $miasto = $('#id_miasto');
+        var $phoneCountryCode = $('#id_phone_country_code')
         var $telefon = $('#id_telefon');
         var $submitButton = $('#submit_button');
 
@@ -115,6 +116,7 @@
         $kod_pocztowy.on('input', validateForm);
         $miasto.on('input', validateForm);
         $telefon.on('input', validateForm);
+        $phoneCountryCode.on('change', validateForm)
     });
 </script>
 {% endblock %}

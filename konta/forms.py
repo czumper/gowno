@@ -72,6 +72,33 @@ class CustomLogowanieForm(LoginForm):
         return cleaned_data
 
 class UserProfileForm(forms.ModelForm):
+    phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', required=False)
+    telefon = forms.CharField(max_length=9, label='Telefon')
+
     class Meta:
         model = UserProfile
         fields = ['ulica', 'numer_domu', 'numer_mieszkania', 'kod_pocztowy', 'miasto', 'telefon']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.telefon:
+            # Rozdzielamy telefon na kierunkowy i numer
+            if self.instance.telefon.startswith('+'):
+                self.initial['phone_country_code'] = self.instance.telefon[:3]  # np. +48
+                self.initial['telefon'] = self.instance.telefon[3:]  # reszta numeru
+            else:
+                self.initial['telefon'] = self.instance.telefon
+
+    def clean_telefon(self):
+        telefon = self.cleaned_data['telefon']
+        if not telefon.isdigit() or len(telefon) != 9:
+            raise forms.ValidationError('Numer telefonu musi mieć dokładnie 9 cyfr.')
+        return telefon
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        full_phone = f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}"
+        instance.telefon = full_phone
+        if commit:
+            instance.save()
+        return instance

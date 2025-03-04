@@ -35,6 +35,7 @@ class CustomZarejestrujForm(SignupForm):
     
     def save(self, request):
         user = super().save(request)
+        calytelefon = f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}"
         UserProfile.objects.create(
             user=user,
             ulica=self.cleaned_data['ulica'],
@@ -42,7 +43,7 @@ class CustomZarejestrujForm(SignupForm):
             numer_mieszkania=self.cleaned_data['numer_mieszkania'],
             kod_pocztowy=self.cleaned_data['kod_pocztowy'],
             miasto=self.cleaned_data['miasto'],
-            telefon=f"{self.cleaned_data['phone_country_code']}{self.cleaned_data['telefon']}",
+            telefon=calytelefon,
         )
         return user
 

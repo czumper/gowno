@@ -1,0 +1,24 @@
+{% extends "baza.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1 class="display-4 text-warning">Potwierdź swój email</h1>
+    <p class="lead">Cześć {{ email }}!</p>
+    <p>JKliknij poniżej, aby potwierdzić swój email!</p>
+    
+   
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px; background-color: #f8f9fa; border: 2px solid #ff5733;">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-lg btn-success w-100 mb-3">Potwierdź Email 🍕</button>
+        </form>
+        <p class="text-muted">Nie Ty? Po prostu zignoruj ten mail.</p>
+    </div>
+    
+    <div class="mt-4">
+        <img src="{% static 'images/salami.jpg' %}" alt="Pizzunia" style="width: 100px; opacity: 0.8;">
+    </div>
+</div>
+{% endblock %}

@@ -1,9 +1,0 @@
-Siema {{ user.username }}!
-
-Kliknij poniżej, żeby potwierdzić swój email:
-
-{{ activate_url }}
-
-Jeśli to nie Ty, zignoruj ten email.
-
-Smacznego 🍕

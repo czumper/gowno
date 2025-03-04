@@ -19,6 +19,7 @@ class CustomZarejestrujForm(SignupForm):
     numer_mieszkania = forms.CharField(max_length=5, label='Numer mieszkania', required=False)
     kod_pocztowy = forms.CharField(max_length=6, label='Kod pocztowy')
     miasto = forms.CharField(max_length=40, label='Miasto')
+    phone_country_code = forms.ChoiceField(choices=COUNTRY_CODES, label='Kierunkowy', initial='+48')
     telefon = forms.CharField(max_length=9, label='Telefon')
     
     def clean_username(self):

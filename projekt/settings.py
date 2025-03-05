@@ -66,11 +66,12 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[pitcernia.ninja] "
-ACCOUNT_MAX_EMAIL_ADDRESSES = 1  # Maksymalnie jeden email
+ACCOUNT_MAX_EMAIL_ADDRESSES = 1  
 ACCOUNT_PREVENT_ENUMERATION = True  # Ochrona przed zgadywaniem emaili
-ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180  # 3 minuty cooldown przy zmianie emaila
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180  
 ACCOUNT_CHANGE_EMAIL = True
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  # 1 dzień na potwierdzenie emaila
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  
+ACCOUNT_PASSWORD_CHANGE_REDIRECT_URL = '/accounts/password/change/done/'
 
 ACCOUNT_FORMS = {
     'signup': 'konta.forms.CustomZarejestrujForm',

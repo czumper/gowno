@@ -40,13 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'konta.apps.KontaConfig',
+    'konta',
     'menu',
     'zamowienia',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'rest_framework',
+    'corsheaders',
 ]
 
 SITE_ID=1
@@ -56,27 +58,19 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-
 LOGIN_REDIRECT_URL = '/'  
 LOGOUT_REDIRECT_URL = '/'  
 
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[pitcernia.ninja] "
-ACCOUNT_MAX_EMAIL_ADDRESSES = 1  
-ACCOUNT_PREVENT_ENUMERATION = True  # Ochrona przed zgadywaniem emaili
-ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180  
-ACCOUNT_CHANGE_EMAIL = True
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  
-ACCOUNT_PASSWORD_CHANGE_REDIRECT_URL = '/accounts/password/change/done/'
 
 ACCOUNT_FORMS = {
     'signup': 'konta.forms.CustomZarejestrujForm',
     'login': 'konta.forms.CustomLogowanieForm',
-    'change_email': 'konta.forms.CustomAddEmailForm',
 }
 
 MIDDLEWARE = [
@@ -88,6 +82,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'projekt.urls'
@@ -148,7 +143,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'pl'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'CET'
 
@@ -176,5 +171,10 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Połączenie z serwerem reacta
+]
+
 
 

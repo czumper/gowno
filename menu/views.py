@@ -9,3 +9,5 @@ def menu(request):
         ]
     }
     return render(request, 'menu/menu.html', context)
+
+

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'corsheaders',
+    
 ]
 
 SITE_ID=1
@@ -173,8 +174,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Połączenie z serwerem reacta
+    "http://localhost:3000",  # Połączenie z serwerem reacta TOPKO
 ]
 
-
+CORS_ALLOW_ALL_ORIGINS = True  #nie wiem czy dobrze
 
